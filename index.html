@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Monitoring System - Output Demo</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .terminal {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .log-info {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .log-warning {
+            color: #ffaa00;
+            background: rgba(255, 170, 0, 0.1);
+        }
+        
+        .log-error {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+        
+        .status-section {
+            background: #2d2d2d;
+            border-left: 4px solid #00ff88;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .ecosystem-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .ecosystem-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .health-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .health-excellent { background: #00ff88; }
+        .health-good { background: #88ff00; }
+        .health-moderate { background: #ffaa00; }
+        .health-poor { background: #ff6600; }
+        .health-critical { background: #ff4444; }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .action-item {
+            background: rgba(255, 170, 0, 0.2);
+            border: 1px solid #ffaa00;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .priority-high { border-color: #ff4444; background: rgba(255, 68, 68, 0.2); }
+        .priority-medium { border-color: #ffaa00; background: rgba(255, 170, 0, 0.2); }
+        .priority-low { border-color: #00ff88; background: rgba(0, 255, 136, 0.2); }
+        
+        .btn {
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .realtime-data {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .data-stream {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            background: #333;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #00ff88, #00ccff);
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Environmental Monitoring System</h1>
+            <p>AI-Powered Ecosystem Restoration & Monitoring</p>
+        </div>
+        
+        <div class="terminal">
+            <h3>📊 System Console Output</h3>
+            <div id="console-output">
+                <div class="log-entry log-info">INFO - Starting monitoring cycle...</div>
+                <div class="log-entry log-info">INFO - Registered ecosystem: forest_001</div>
+                <div class="log-entry log-info">INFO - Registered ecosystem: wetland_001</div>
+                <div class="log-entry log-info">INFO - Processing sensor data from sensor_001</div>
+                <div class="log-entry log-info">INFO - Processing sensor data from sensor_002</div>
+                <div class="log-entry log-info">INFO - Community feedback submitted: feedback_001</div>
+                <div class="log-entry log-warning">WARNING - Ecosystem wetland_001 health status: POOR (35.0)</div>
+                <div class="log-entry log-info">INFO - Assigned environmental_monitoring task to agent drone_001 for ecosystem wetland_001</div>
+                <div class="log-entry log-info">INFO - Assigned monitoring mission mission_20250704_143052 to ecosystem wetland_001</div>
+                <div class="log-entry log-info">INFO - Generated 3 restoration actions</div>
+            </div>
+        </div>
+        
+        <div class="status-section">
+            <h2>🎯 ENVIRONMENTAL MONITORING SYSTEM STATUS</h2>
+            <div class="separator">============================================================</div>
+            
+            <h3>🏞️ Registered Ecosystems: 2</h3>
+            <div class="ecosystem-card">
+                <div style="display: flex; align-items: center;">
+                    <div class="health-indicator health-moderate"></div>
+                    <div>
+                        <strong>forest_001</strong>
+                        <div>Forest Ecosystem</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="metric-value">65.0</div>
+                    <div>Health Score</div>
+                </div>
+            </div>
+            
+            <div class="ecosystem-card">
+                <div style="display: flex; align-items: center;">
+                    <div class="health-indicator health-poor"></div>
+                    <div>
+                        <strong>wetland_001</strong>
+                        <div>Wetland Ecosystem</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="metric-value">35.0</div>
+                    <div>Health Score</div>
+                </div>
+            </div>
+            
+            <h3>🤖 Active Agents: 2</h3>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div><strong>drone_001</strong></div>
+                    <div>Monitoring Drone</div>
+                    <div style="color: #ffaa00;">Status: BUSY</div>
+                </div>
+                <div class="metric-card">
+                    <div><strong>sensor_001</strong></div>
+                    <div>Ground Sensor</div>
+                    <div style="color: #00ff88;">Status: IDLE</div>
+                </div>
+            </div>
+            
+            <h3>🛠️ Pending Restoration Actions: 3</h3>
+            <div class="action-item priority-high">
+                <div><strong>🌊 Water Treatment</strong> - Priority: 1</div>
+                <div>Expected Impact: 60% | Timeline: 90 days</div>
+                <div>Cost: $456,000 | Location: Wetland_001</div>
+            </div>
+            
+            <div class="action-item priority-medium">
+                <div><strong>🧹 Pollution Cleanup</strong> - Priority: 8</div>
+                <div>Expected Impact: 30% | Timeline: 30 days</div>
+                <div>Cost: $5,000 | Community Driven</div>
+            </div>
+            
+            <div class="action-item priority-low">
+                <div><strong>🌱 Soil Restoration</strong> - Priority: 2</div>
+                <div>Expected Impact: 40% | Timeline: 60 days</div>
+                <div>Cost: $510,000 | Location: Forest_001</div>
+            </div>
+        </div>
+        
+        <div class="realtime-data">
+            <h3>📡 Real-time Sensor Data Stream</h3>
+            <div class="data-stream" id="sensor-stream">
+                <div class="log-entry">2025-07-04 14:30:52 - Sensor_001: Temp=22.5°C, Humidity=65%, AQ=45</div>
+                <div class="log-entry">2025-07-04 14:30:52 - Sensor_002: Temp=24.1°C, Humidity=80%, AQ=85</div>
+                <div class="log-entry">2025-07-04 14:31:15 - Drone_001: Aerial survey complete - 25 images captured</div>
+                <div class="log-entry">2025-07-04 14:31:22 - Sensor_001: Water Quality=78%, pH=6.8, Noise=55dB</div>
+                <div class="log-entry">2025-07-04 14:31:45 - Alert: Biodiversity index below threshold in wetland_001</div>
+                <div class="log-entry">2025-07-04 14:32:01 - Community Report: Unusual odor detected near coordinates [40.7128, -74.0060]</div>
+                <div class="log-entry">2025-07-04 14:32:18 - AI Prediction: Forest health trending stable (+0.2% monthly)</div>
+                <div class="log-entry">2025-07-04 14:32:35 - Resource Allocation: Scheduling drone maintenance for tomorrow</div>
+            </div>
+        </div>
+        
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div>🌡️ Average Temperature</div>
+                <div class="metric-value">23.3°C</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div>💧 Water Quality Index</div>
+                <div class="metric-value">61.5</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 62%"></div>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div>🦋 Biodiversity Score</div>
+                <div class="metric-value">0.45</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 45%"></div>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div>🌿 Vegetation Density</div>
+                <div class="metric-value">0.55</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 55%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn" onclick="simulateNewData()">📊 Generate New Data</button>
+            <button class="btn" onclick="runAnalysis()">🔍 Run Analysis</button>
+            <button class="btn" onclick="showPredictions()">🔮 Show Predictions</button>
+        </div>
+        
+        <div class="terminal" style="margin-top: 30px;">
+            <h3>💡 System Capabilities Demonstrated:</h3>
+            <div class="log-entry log-info">✅ Real-time ecosystem health monitoring</div>
+            <div class="log-entry log-info">✅ Multi-agent coordination (drones, sensors)</div>
+            <div class="log-entry log-info">✅ AI-powered restoration recommendations</div>
+            <div class="log-entry log-info">✅ Community feedback integration</div>
+            <div class="log-entry log-info">✅ Predictive trend analysis</div>
+            <div class="log-entry log-info">✅ Priority-based action planning</div>
+            <div class="log-entry log-info">✅ Cost and timeline estimation</div>
+            <div class="log-entry log-info">✅ Database storage and retrieval</div>
+        </div>
+    </div>
+    
+    <script>
+        function simulateNewData() {
+            const consoleOutput = document.getElementById('console-output');
+            const timestamp = new Date().toTimeString().split(' ')[0];
+            
+            const newEntries = [
+                `<div class="log-entry log-info">INFO - ${timestamp} - New sensor data received from sensor_003</div>`,
+                `<div class="log-entry log-warning">WARNING - ${timestamp} - Air quality threshold exceeded in forest_001</div>`,
+                `<div class="log-entry log-info">INFO - ${timestamp} - Deploying cleanup crew to community-reported location</div>`
+            ];
+            
+            newEntries.forEach((entry, index) => {
+                setTimeout(() => {
+                    consoleOutput.innerHTML += entry;
+                    consoleOutput.scrollTop = consoleOutput.scrollHeight;
+                }, index * 500);
+            });
+        }
+        
+        function runAnalysis() {
+            const sensorStream = document.getElementById('sensor-stream');
+            const timestamp = new Date().toTimeString().split(' ')[0];
+            
+            const analysisData = [
+                `<div class="log-entry">${timestamp} - Running comprehensive ecosystem analysis...</div>`,
+                `<div class="log-entry">${timestamp} - Processing 1,247 data points from last 24 hours</div>`,
+                `<div class="log-entry">${timestamp} - ML Model: Predicting 15% improvement with proposed actions</div>`,
+                `<div class="log-entry">${timestamp} - Optimization: Reordering actions based on cost-benefit analysis</div>`
+            ];
+            
+            analysisData.forEach((entry, index) => {
+                setTimeout(() => {
+                    sensorStream.innerHTML += entry;
+                    sensorStream.scrollTop = sensorStream.scrollHeight;
+                }, index * 700);
+            });
+        }
+        
+        function showPredictions() {
+            const sensorStream = document.getElementById('sensor-stream');
+            const timestamp = new Date().toTimeString().split(' ')[0];
+            
+            const predictions = [
+                `<div class="log-entry">${timestamp} - 📈 Prediction: Forest health +12% improvement in 6 months</div>`,
+                `<div class="log-entry">${timestamp} - 📉 Prediction: Wetland requires immediate intervention</div>`,
+                `<div class="log-entry">${timestamp} - 🎯 Recommendation: Prioritize water treatment over reforestation</div>`,
+                `<div class="log-entry">${timestamp} - 💰 Cost-benefit: $456K investment = 60% health improvement</div>`
+            ];
+            
+            predictions.forEach((entry, index) => {
+                setTimeout(() => {
+                    sensorStream.innerHTML += entry;
+                    sensorStream.scrollTop = sensorStream.scrollHeight;
+                }, index * 600);
+            });
+        }
+        
+        // Auto-scroll sensor data simulation
+        setInterval(() => {
+            const sensorStream = document.getElementById('sensor-stream');
+            const timestamp = new Date().toTimeString().split(' ')[0];
+            const randomTemp = (20 + Math.random() * 10).toFixed(1);
+            const randomHumidity = (50 + Math.random() * 40).toFixed(0);
+            const randomAQ = (30 + Math.random() * 80).toFixed(0);
+            
+            const newEntry = `<div class="log-entry">${timestamp} - Sensor_00${Math.floor(Math.random() * 3) + 1}: Temp=${randomTemp}°C, Humidity=${randomHumidity}%, AQ=${randomAQ}</div>`;
+            sensorStream.innerHTML += newEntry;
+            sensorStream.scrollTop = sensorStream.scrollHeight;
+            
+            // Keep only last 20 entries
+            const entries = sensorStream.getElementsByClassName('log-entry');
+            if (entries.length > 20) {
+                sensorStream.removeChild(entries[0]);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
